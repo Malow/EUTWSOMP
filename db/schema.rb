@@ -11,7 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 1) do
+ActiveRecord::Schema.define(version: 20151015202318) do
+
+  create_table "missions", force: true do |t|
+    t.string   "name"
+    t.datetime "date"
+    t.integer  "user_id"
+  end
+
+  add_index "missions", ["user_id"], name: "index_missions_on_user_id"
+
+  create_table "missions_users", id: false, force: true do |t|
+    t.integer "user_id"
+    t.integer "mission_id"
+  end
+
+  add_index "missions_users", ["mission_id"], name: "index_missions_users_on_mission_id"
+  add_index "missions_users", ["user_id"], name: "index_missions_users_on_user_id"
 
   create_table "users", force: true do |t|
     t.string   "username"

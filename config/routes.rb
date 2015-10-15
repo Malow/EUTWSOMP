@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
   root 'application#index'
   
-  get "/login" => "authentication#is_logged_in"
-  get "/register" => "authentication#is_logged_in"
-  get "/account_settings" => "authentication#is_logged_in"
+  get "/login" => "authentication#is_logged_in_then_go_to_dashboard"
+  get "/register" => "authentication#is_logged_in_then_go_to_dashboard"
+  get "/account_settings" => "authentication#is_not_logged_in_then_go_to_root"
   
   resources :authentication, only: [:create]
   

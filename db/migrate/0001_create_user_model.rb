@@ -1,5 +1,5 @@
 class CreateUserModel < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :users do |t|
       t.column :username, :string
       t.column :email, :string
@@ -8,9 +8,5 @@ class CreateUserModel < ActiveRecord::Migration
       t.column :signed_up_on, :datetime
       t.column :is_admin, :boolean
     end
-  end
-
-  def self.down
-    drop_table :users
   end
 end

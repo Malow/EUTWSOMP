@@ -1,12 +1,23 @@
 class AuthenticationController < ApplicationController
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
 
-  def is_logged_in
+  def is_logged_in_then_go_to_dashboard
     gon.init = true
-    if session[:username]
+    if session[:username] && User.where(:username => session[:username]).first
       redirect_to :root
     else
+      gon.your_username = session[:username]
       render("layouts/application")
+    end
+  end
+  
+  def is_not_logged_in_then_go_to_login
+    gon.init = true
+    if session[:username] && User.where(:username => session[:username]).first
+      gon.your_username = session[:username]
+      render("layouts/application")
+    else
+      redirect_to '/login'
     end
   end
   

@@ -1,21 +1,9 @@
 class User < ActiveRecord::Base
+  has_and_belongs_to_many :joined_missions, :class_name => "Mission"
+  has_many :created_missions, :class_name => "Mission"
   
   validates_uniqueness_of :email
   validates_uniqueness_of :username
-
-  def initialize(attributes = {})
-    super     # must allow the active record to initialize!
-    attributes.each do |name, value|
-      send("#{name}=", value)
-    end
-  end
-
-  def update(attributes = {})
-    super     # must allow the active record to initialize!
-    attributes.each do |name, value|
-      send("#{name}=", value)
-    end
-  end
 
   def self.authenticate_by_username(username, password)
     user = User.where(:username => username).first

@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   
   def index
     gon.init = true
-    if session[:username]
+    if session[:username] && User.where(:username => session[:username]).first
       gon.your_username = session[:username]
       render("layouts/application")
     else
