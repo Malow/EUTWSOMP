@@ -1,0 +1,23 @@
+.common
+  %div
+    %h4 EUTW Spec Ops Mission Planner
+    %h4 Register
+    
+  .input_line
+    %p Username:
+    %input{"type" => "text",
+           "ng-model" => "username",
+           "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
+    %p Password: 
+    %input{"type" => "password",
+           "ng-model" => "password",
+           "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
+    %p Email: 
+    %input{"type" => "text",
+           "ng-model" => "email",
+           "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
+    %br
+    %input{"type" => "submit",
+           "value" => "Register",
+           "id" => "btn",
+           "ng-click" => "register(username, password, email)"}
