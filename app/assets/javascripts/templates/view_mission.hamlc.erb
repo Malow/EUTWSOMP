@@ -1,0 +1,41 @@
+.common
+  %div
+    %h4 EUTW Spec Ops Mission Planner
+    
+
+.logged_in
+  %div
+    %p You are logged in as {{page_data.you.username}}
+    %input{"type" => "submit",
+           "value" => "Account Settings",
+           "ng-click" => "go_to_account_settings()"}
+    %input{"type" => "submit",
+           "value" => "Log out",
+           "ng-click" => "logout()"}
+             
+             
+.menu
+  %div
+    %p Menu
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('missions')"} Missions
+    %br
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('mission_templates')"} Mission Templates
+    %br
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('users')"} Users
+    %br
+    
+    
+.view_mission
+  .content
+    .created_by
+      %span Created by {{current_mission.creator.username}} at {{format_date(current_mission.created_at)}}
+    %span {{current_mission.name}}
+    %br
+    %input{"type" => "submit",
+           "value" => "Join Mission",
+           "ng-click" => "join_mission(current_mission.id)",
+           "ng-if" => "!am_i_in_mission(current_mission.id)"}
+    %span.date_text {{format_date(current_mission.date)}}

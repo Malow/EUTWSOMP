@@ -6,7 +6,6 @@ module Authenticator
     return false
   end  
   
-  
   def self.register(params, session)
     @user = User.new()
     @user.username = params[:username]

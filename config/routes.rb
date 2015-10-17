@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   
   resources :account, only: [:create]
   resources :page_data, only: [:create]
+  resources :mission, only: [:create]
+  
   
   get '*angular_route', to: 'application#index'
 end

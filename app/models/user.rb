@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :joined_missions, :class_name => "Mission"
-  has_many :created_missions, :class_name => "Mission"
+  has_many :created_missions, :class_name => "Mission", :foreign_key => 'creator_id'
+  has_many :participants
+  has_many :missions, :through => :participants
   
   validates_uniqueness_of :email
   validates_uniqueness_of :username

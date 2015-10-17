@@ -2,11 +2,12 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
   .config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) ->
     $locationProvider.html5Mode(true)
     $routeProvider
-      .when('/',                                {template: (-> JST['dashboard']()),  reloadOnSearch: false })
-      .when('/login',                           {template: (-> JST['login']()),  reloadOnSearch: false })
+      .when('/',                                {template: (-> JST['dashboard']()), reloadOnSearch: false })
+      .when('/login',                           {template: (-> JST['login']()), reloadOnSearch: false })
       .when('/register',                        {template: (-> JST['register']()),  reloadOnSearch: false })
-      .when('/account_settings',                {template: (-> JST['account_settings']()),  reloadOnSearch: false })
-      .when('/new_mission',                     {template: (-> JST['new_mission']()),  reloadOnSearch: false })
+      .when('/account_settings',                {template: (-> JST['account_settings']()), reloadOnSearch: false })
+      .when('/new_mission',                     {template: (-> JST['new_mission']()), reloadOnSearch: false })
+      .when('/view_mission/:mission_id',        {template: (-> JST['view_mission']()), reloadOnSearch: false })
       .otherwise({redirectTo: '/'})
   ])
   
@@ -17,14 +18,21 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
   .factory 'PageData', ['$resource', ($resource) ->
     $resource("/page_data")
   ]
+  
+  .factory 'Mission', ['$resource', ($resource) ->
+    $resource("/mission")
+  ]
 
-  .controller 'EUTWSpecOpsMissionPlannerController', ['$scope', '$window', '$location', '$interval', 'Account', 'PageData', ($scope, $window, $location, $interval, Account, PageData) ->
+  .controller 'EUTWSpecOpsMissionPlannerController', ['$scope', '$window', '$location', '$interval', '$routeParams', 'Account', 'PageData', 'Mission', 
+  ($scope, $window, $location, $interval, $routeParams, Account, PageData, Mission) ->
     
     $scope.refresh = () ->
       page_data = new PageData()
       page_data.$save ((data, headers) ->
         if page_data.table.has_updates
           $scope.page_data = page_data.table
+          if $routeParams.mission_id && $scope.page_data
+            $scope.set_current_mission_from_page_data($routeParams.mission_id)
       ), (error) ->
         if error.data && error.data.message
           $scope.error = error.data.message
@@ -34,13 +42,44 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
     $scope.intervalPromise = $interval((->
       $scope.refresh()
       return
-      ), 100000)
+      ), 1000000)
       
     $scope.refresh()
+    
+    $scope.find_user_from_page_data = (id) ->
+      i = 0
+      while i < $scope.page_data.users.length
+        if $scope.page_data.users[i].id == (Number) id
+          return $scope.page_data.users[i]
+        ++i
+        
+    $scope.find_mission_from_page_data = (id) -> 
+      if $scope.page_data && $scope.page_data.missions
+        i = 0
+        m = null
+        while i < $scope.page_data.missions.length
+          if $scope.page_data.missions[i].id == (Number) id
+            return $scope.page_data.missions[i]
+          ++i
+      return null
+    
+    $scope.set_current_mission_from_page_data = (id) ->
+      m = $scope.find_mission_from_page_data(id)
+      if m
+        $scope.current_mission = new Mission()
+        $scope.current_mission.id = m.id
+        $scope.current_mission.name = m.name
+        $scope.current_mission.date = new Date(m.date)
+        $scope.current_mission.created_at = new Date(m.created_at)
+        $scope.current_mission.updated_at = new Date(m.updated_at)
+        $scope.current_mission.creator = $scope.find_user_from_page_data(m.creator_id)
+    
+    $scope.$on '$routeChangeSuccess', ->
+      if $routeParams.mission_id && $scope.page_data
+        $scope.set_current_mission_from_page_data($routeParams.mission_id)
        
     $scope.dashboard_selection = 'missions'
     
-                
     $scope.register = (username, password, email) ->
       $scope.error = null
       account = new Account()
@@ -78,6 +117,9 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
       
     $scope.go_to_new_mission = () ->
       $location.path("/new_mission")
+      
+    $scope.go_to_view_mission = (id) ->
+      $location.path("/view_mission/" + id)
         
     $scope.logout = () ->
       $scope.error = null
@@ -101,12 +143,36 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
         
     $scope.create_mission = (mission_name, mission_template, mission_datetime) ->
       $scope.error = null
-      console.log("Creating mission: " + mission_name)
-      console.log("Template: " + mission_template)
-      console.log("Datetime: " + mission_datetime)
-      
-      
-      
+      mission = new Mission()
+      mission.mission_action = "create"
+      mission.name = mission_name
+      mission.template = mission_template
+      mission.$save ((data, headers) ->
+        $location.path("/view_mission/" + mission.id)
+        $scope.refresh()
+      ), (error) ->
+        $scope.error = error.data.message
+        
+    $scope.join_mission = (id) ->
+      $scope.error = null
+      mission = new Mission()
+      mission.mission_action = "join"
+      mission.mission_id = id
+      mission.$save ((data, headers) ->
+        $scope.refresh()
+      ), (error) ->
+        $scope.error = error.data.message
+        
+    $scope.am_i_in_mission = (mission_id) ->
+      m = $scope.find_mission_from_page_data(mission_id)
+      if m
+        i = 0
+        while i < $scope.page_data.participants.length
+          if $scope.page_data.participants[i].user_id == $scope.page_data.you.id
+            return true
+          ++i
+      return false
+        
       
     #DateTime picker
     #$scope.mission_datetime = new Date()
@@ -117,85 +183,38 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
     
     
     
+    #angular.element($0).scope().am_i_in_mission(4)
     
+    $scope.is_date_in_future = (date) ->
+      date = new Date(date)
+      date.setHours(0)
+      date.setMinutes(0)
+      date.setSeconds(0)
+      date.setMilliseconds(0)
+      now = new Date()
+      now.setHours(0)
+      now.setMinutes(0)
+      now.setSeconds(0)
+      now.setMilliseconds(0)
+      if date >= now
+        return true
+      return false
     
+      
+    $scope.force_two_digits = (val) ->
+      if val < 10
+        return "0#{val}"
+      return val
     
+    $scope.format_date = (date) ->
+      if date
+        date = new Date(date)
+        year = date.getFullYear()
+        month = $scope.force_two_digits(date.getMonth()+1)
+        day = $scope.force_two_digits(date.getDate())
+        hour = $scope.force_two_digits(date.getHours())
+        minute = $scope.force_two_digits(date.getMinutes())
+        time_stamp = "" + year + "-" + month + "-" + day + " " + hour + ":" + minute    
+        return time_stamp
     
-    
-    
-    
-    
-    
-    
-    
-    
-    $scope.today = ->
-      $scope.dt = new Date
-      return
-
-    $scope.today()
-
-    $scope.clear = ->
-      $scope.dt = null
-      return
-
-    # Disable weekend selection
-
-    $scope.disabled = (date, mode) ->
-      mode == 'day' and (date.getDay() == 0 or date.getDay() == 6)
-
-    $scope.toggleMin = ->
-      $scope.minDate = if $scope.minDate then null else new Date
-      return
-
-    $scope.toggleMin()
-    $scope.maxDate = new Date(2020, 5, 22)
-
-    $scope.open = ($event) ->
-      $scope.status.opened = true
-      return
-
-    $scope.setDate = (year, month, day) ->
-      $scope.dt = new Date(year, month, day)
-      return
-
-    $scope.dateOptions =
-      formatYear: 'yy'
-      startingDay: 1
-    $scope.formats = [
-      'dd-MMMM-yyyy'
-      'yyyy/MM/dd'
-      'dd.MM.yyyy'
-      'shortDate'
-    ]
-    $scope.format = $scope.formats[0]
-    $scope.status = opened: false
-    tomorrow = new Date
-    tomorrow.setDate tomorrow.getDate() + 1
-    afterTomorrow = new Date
-    afterTomorrow.setDate tomorrow.getDate() + 2
-    $scope.events = [
-      {
-        date: tomorrow
-        status: 'full'
-      }
-      {
-        date: afterTomorrow
-        status: 'partially'
-      }
-    ]
-
-    $scope.getDayClass = (date, mode) ->
-      if mode == 'day'
-        dayToCheck = new Date(date).setHours(0, 0, 0, 0)
-        i = 0
-        while i < $scope.events.length
-          currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0)
-          if dayToCheck == currentDay
-            return $scope.events[i].status
-          i++
-      ''    
-    
-    
-
   ]

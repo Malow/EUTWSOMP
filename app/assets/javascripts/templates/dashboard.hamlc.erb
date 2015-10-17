@@ -56,9 +56,40 @@
       %input{"type" => "submit",
              "value" => "New Mission",
              "ng-click" => "go_to_new_mission()"}
-      %p Missions
-      .item{"ng-repeat" => "mission in page_data.missions"}
-        %p Mission here
+      %p Upcomming Missions
+      %table
+        %tr.header
+          %th
+            %p.header Name
+          %th
+            %p.header Date and Time
+        %tr.item{"ng-repeat" => "mission in page_data.missions",
+                 "ng-style" => "listitemstyle",
+                 "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b', 'cursor': 'pointer'}",
+                 "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b', 'cursor': 'auto'}",
+                 "ng-click" => "go_to_view_mission(mission.id)", 
+                 "ng-if" => "is_date_in_future(mission.date)"}
+          %td 
+            %p.item {{mission.name}}
+          %td 
+            %p.item {{format_date(mission.date)}}
+      %p Past Missions
+      %table
+        %tr.header
+          %th
+            %p.header Name
+          %th
+            %p.header Date and Time
+        %tr.item{"ng-repeat" => "mission in page_data.missions",
+                 "ng-style" => "listitemstyle",
+                 "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b', 'cursor': 'pointer'}",
+                 "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b', 'cursor': 'auto'}",
+                 "ng-click" => "go_to_view_mission(mission.id)", 
+                 "ng-if" => "!is_date_in_future(mission.date)"}
+          %td 
+            %p.item {{mission.name}}
+          %td 
+            %p.item {{format_date(mission.date)}}
         
         
   .mission_template_list{"ng-if" => "dashboard_selection == 'mission_templates'"}  
