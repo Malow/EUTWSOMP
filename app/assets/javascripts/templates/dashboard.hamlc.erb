@@ -2,23 +2,68 @@
   %div
     %h4 EUTW Spec Ops Mission Planner
     
+
+.logged_in
+  %div
+    %p You are logged in as {{page_data.you.username}}
+    %input{"type" => "submit",
+           "value" => "Account Settings",
+           "ng-click" => "go_to_account_settings()"}
+    %input{"type" => "submit",
+           "value" => "Log out",
+           "ng-click" => "logout()"}
+           
+.menu
+  %div
+    %p Menu
+    %a{"href" => "javascript:;", 
+       "ng-click" => "dashboard_selection = 'missions'",
+       "ng-class" => "dashboard_selection == 'missions' ? 'current' : 'other'"} Missions
+    %br
+    %a{"href" => "javascript:;", 
+       "ng-click" => "dashboard_selection = 'mission_templates'",
+       "ng-class" => "dashboard_selection == 'mission_templates' ? 'current' : 'other'"} Mission Templates
+    %br
+    %a{"href" => "javascript:;", 
+       "ng-click" => "dashboard_selection = 'users'",
+       "ng-class" => "dashboard_selection == 'users' ? 'current' : 'other'"} Users
+    %br
+      
 .dashboard
-  .logged_in
-    %div
-      %p You are logged in as {{your_username}}
+  .user_list{"ng-if" => "dashboard_selection == 'users'"}
+    .list
+      %p Users
+      .item{"ng-repeat" => "user in page_data.users",
+            "ng-if" => "user.is_admin",
+            "ng-style" => "listitemstyle",
+            "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b'}",
+            "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b'}"}
+        %span {{user.username}}
+        %span.admin Admin
+      .item{"ng-repeat" => "user in page_data.users",
+            "ng-if" => "!user.is_admin",
+            "ng-style" => "listitemstyle",
+            "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b'}",
+            "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b'}"}
+        %span {{user.username}}
+        %a{"ng-if" => "page_data.you.is_admin", 
+           "href" => "javascript:;", 
+           "ng-click" => "make_admin(user)"} Make Admin
+       
+
+  .mission_list{"ng-if" => "dashboard_selection == 'missions'"} 
+    .list
       %input{"type" => "submit",
-             "value" => "Account Settings",
-             "ng-click" => "go_to_account_settings()"}
-      %input{"type" => "submit",
-             "value" => "Log out",
-             "ng-click" => "logout()"}
-             
-  .menu
-    %div
-      %p Menu
-      %a{"href" => "javascript:;", "ng-click" => "go_to_missions()"} Missions
-      %br
-      %a{"href" => "javascript:;", "ng-click" => "go_to_mission_templates()"} Mission Templates
-      %br
-      %a{"href" => "javascript:;", "ng-click" => "go_to_users()"} Users
-      %br
+             "value" => "New Mission",
+             "ng-click" => "go_to_new_mission()"}
+      %p Missions
+      .item{"ng-repeat" => "mission in page_data.missions"}
+        %p Mission here
+        
+        
+  .mission_template_list{"ng-if" => "dashboard_selection == 'mission_templates'"}  
+    .list
+      %p Mission Templates
+      .item{"ng-repeat" => "mission_template in page_data.mission_templates"}
+        %p Mission Template here  
+        

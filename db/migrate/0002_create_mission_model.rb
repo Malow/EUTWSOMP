@@ -1,4 +1,4 @@
-class CreateMissions < ActiveRecord::Migration
+class CreateMissionModel < ActiveRecord::Migration
   def change
     create_table :missions do |t|
       t.column :name, :string

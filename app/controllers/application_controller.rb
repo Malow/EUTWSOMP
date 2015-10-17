@@ -1,14 +1,10 @@
-require 'gon'
-
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   
   def index
-    gon.init = true
-    if session[:username] && User.where(:username => session[:username]).first
-      gon.your_username = session[:username]
+    if Authenticator.is_logged_in(session)
       render("layouts/application")
     else
       redirect_to "/login"

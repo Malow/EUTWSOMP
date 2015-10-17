@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015202318) do
+ActiveRecord::Schema.define(version: 2) do
 
   create_table "missions", force: true do |t|
     t.string   "name"

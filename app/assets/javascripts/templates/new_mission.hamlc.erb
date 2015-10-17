@@ -1,0 +1,60 @@
+.common
+  %div
+    %h4 EUTW Spec Ops Mission Planner
+    %h4 New Mission
+    
+
+.logged_in
+  %div
+    %p You are logged in as {{page_data.you.username}}
+    %input{"type" => "submit",
+           "value" => "Account Settings",
+           "ng-click" => "go_to_account_settings()"}
+    %input{"type" => "submit",
+           "value" => "Log out",
+           "ng-click" => "logout()"}
+             
+             
+.menu
+  %div
+    %p Menu
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('missions')"} Missions
+    %br
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('mission_templates')"} Mission Templates
+    %br
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('users')"} Users
+    %br
+      
+      
+.new_mission
+  .input_line
+    %p Mission Name:
+    %input{"type" => "text",
+           "ng-model" => "mission_name",
+           "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
+    %p Template: 
+    %input{"type" => "text",
+           "ng-model" => "mission_template",
+           "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
+    %p Date and Time:
+    .datetime_picker
+      
+    %br
+    %input{"type" => "submit",
+           "value" => "Create Mission",
+           "id" => "btn",
+           "ng-click" => "create_mission(mission_name, mission_template, mission_datetime)"}
+           
+           
+           
+           
+%div{:style => "display:inline-block; min-height:290px;"}
+  %uib-datepicker.well.well-sm{"custom-class" => "getDayClass(date, mode)", "min-date" => "minDate", "ng-model" => "dt", "show-weeks" => "true"}
+           
+           
+           
+           
+           
