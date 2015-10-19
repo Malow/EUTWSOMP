@@ -30,7 +30,7 @@
       
       
 .new_mission
-  .input_line
+  .container
     %p Mission Name:
     %input{"type" => "text",
            "ng-model" => "mission_name",
@@ -41,20 +41,14 @@
            "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
     %p Date and Time:
     .datetime_picker
-      
+      %div{:style => "display:inline-block; min-height:290px;"}
+        %uib-datepicker.well.well-sm{"custom-class" => "getDayClass(date, mode)", "min-date" => "minDate", "ng-model" => "dt", "show-weeks" => "true"}
     %br
     %input{"type" => "submit",
            "value" => "Create Mission",
            "id" => "btn",
            "ng-click" => "create_mission(mission_name, mission_template, mission_datetime)"}
            
-           
-           
-           
-%div{:style => "display:inline-block; min-height:290px;"}
-  %uib-datepicker.well.well-sm{"custom-class" => "getDayClass(date, mode)", "min-date" => "minDate", "ng-model" => "dt", "show-weeks" => "true"}
-           
-           
-           
+
            
            

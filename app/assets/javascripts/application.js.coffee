@@ -7,7 +7,6 @@
 #= require angular-animate
 #= require hamlcoffee
 #= require i18n/translations
-#= require angular-ui-bootstrap
 #= require bootstrap-sprockets
 #= require_tree .
 

@@ -55,4 +55,3 @@ gem 'rack-attack'
 gem 'tzinfo-data'
 
 gem 'bootstrap-sass', '~> 3.2.0'
-gem 'angular-ui-bootstrap-rails'

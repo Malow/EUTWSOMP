@@ -46,14 +46,16 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
       
     $scope.refresh()
     
-    $scope.find_user_from_page_data = (id) ->
-      i = 0
-      while i < $scope.page_data.users.length
-        if $scope.page_data.users[i].id == (Number) id
-          return $scope.page_data.users[i]
-        ++i
+    $scope.get_user = (id) ->
+      if $scope.page_data && $scope.page_data.users
+        i = 0
+        while i < $scope.page_data.users.length
+          if $scope.page_data.users[i].id == (Number) id
+            return $scope.page_data.users[i]
+          ++i
+       return null
         
-    $scope.find_mission_from_page_data = (id) -> 
+    $scope.get_mission = (id) -> 
       if $scope.page_data && $scope.page_data.missions
         i = 0
         m = null
@@ -62,9 +64,19 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
             return $scope.page_data.missions[i]
           ++i
       return null
-    
+      
+    $scope.get_participants_for_mission = (mission_id) ->
+      participants = []
+      if $scope.page_data && $scope.page_data.participants
+        i = 0
+        while i < $scope.page_data.participants.length
+          if mission_id == $scope.page_data.participants[i].mission_id
+            participants.push($scope.page_data.participants[i])
+          ++i
+      return participants
+          
     $scope.set_current_mission_from_page_data = (id) ->
-      m = $scope.find_mission_from_page_data(id)
+      m = $scope.get_mission(id)
       if m
         $scope.current_mission = new Mission()
         $scope.current_mission.id = m.id
@@ -72,7 +84,7 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
         $scope.current_mission.date = new Date(m.date)
         $scope.current_mission.created_at = new Date(m.created_at)
         $scope.current_mission.updated_at = new Date(m.updated_at)
-        $scope.current_mission.creator = $scope.find_user_from_page_data(m.creator_id)
+        $scope.current_mission.creator = $scope.get_user(m.creator_id)
     
     $scope.$on '$routeChangeSuccess', ->
       if $routeParams.mission_id && $scope.page_data
@@ -164,11 +176,10 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
         $scope.error = error.data.message
         
     $scope.am_i_in_mission = (mission_id) ->
-      m = $scope.find_mission_from_page_data(mission_id)
-      if m
+      if $scope.page_data
         i = 0
         while i < $scope.page_data.participants.length
-          if $scope.page_data.participants[i].user_id == $scope.page_data.you.id
+          if $scope.page_data.participants[i].user_id == $scope.page_data.you.id && mission_id == $scope.page_data.participants[i].mission_id
             return true
           ++i
       return false

@@ -27,8 +27,8 @@
        "ng-click" => "go_to_dashboard('users')"} Users
     %br
     
-    
-.view_mission
+
+.view_mission_header
   .content
     .created_by
       %span Created by {{current_mission.creator.username}} at {{format_date(current_mission.created_at)}}
@@ -39,3 +39,21 @@
            "ng-click" => "join_mission(current_mission.id)",
            "ng-if" => "!am_i_in_mission(current_mission.id)"}
     %span.date_text {{format_date(current_mission.date)}}
+    
+.players
+  .unassigned_players
+    %div
+      %p.header Unassigned Players
+      %table
+        %tr{"ng-repeat" => "participant in get_participants_for_mission(current_mission.id)",
+            "ng-style" => "listitemstyle",
+            "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b'}",
+            "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b'}"}
+          %td 
+            %p {{get_user(participant.user_id).username}}
+          %td 
+            %p {{format_date(participant.joined_at)}}
+            
+  .role_loadout
+    %div
+      %p.header Roles
