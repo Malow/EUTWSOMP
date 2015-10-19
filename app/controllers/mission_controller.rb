@@ -20,7 +20,7 @@ class MissionController < ApplicationController
       begin
         @mission = Mission.new()
         @mission.name = params[:mission][:name]
-        @mission.date = DateTime.now
+        @mission.date = params[:mission][:date]
         @mission.created_at = DateTime.now
         @mission.updated_at = DateTime.now
         @mission.creator = User.where(:username => session[:username]).first

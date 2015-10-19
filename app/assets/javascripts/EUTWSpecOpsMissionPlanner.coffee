@@ -159,6 +159,7 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
       mission.mission_action = "create"
       mission.name = mission_name
       mission.template = mission_template
+      mission.date = mission_datetime
       mission.$save ((data, headers) ->
         $location.path("/view_mission/" + mission.id)
         $scope.refresh()
@@ -184,17 +185,6 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
           ++i
       return false
         
-      
-    #DateTime picker
-    #$scope.mission_datetime = new Date()
-    #$scope.minDate = new Date()
-    #$scope.maxDate = $scope.minDate
-    #$scope.maxDate.setFullYear($scope.minDate.getFullYear() + 1)
-    
-    
-    
-    
-    #angular.element($0).scope().am_i_in_mission(4)
     
     $scope.is_date_in_future = (date) ->
       date = new Date(date)
@@ -211,7 +201,6 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
         return true
       return false
     
-      
     $scope.force_two_digits = (val) ->
       if val < 10
         return "0#{val}"
@@ -227,5 +216,24 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
         minute = $scope.force_two_digits(date.getMinutes())
         time_stamp = "" + year + "-" + month + "-" + day + " " + hour + ":" + minute    
         return time_stamp
+        
+        
+        
+        
+        
+      
+    #DateTime picker
+    $scope.mission_datetime = new Date()
+    $scope.mission_datetime.setHours(20)
+    $scope.mission_datetime.setMinutes(0)
+    $scope.minDate = new Date()
+    $scope.maxDate = new Date()
+    $scope.maxDate.setFullYear($scope.maxDate.getFullYear() + 1)
     
+    
+    $scope.hstep = 1
+    $scope.mstep = 10
   ]
+  
+  
+#angular.element($0).scope().am_i_in_mission(4)

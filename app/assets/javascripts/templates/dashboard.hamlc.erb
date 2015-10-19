@@ -59,13 +59,13 @@
       %p Upcomming Missions
       %table
         %tr.header
-          %th
+          %th{:style => "width: 300px;"}
             %p.header Name
-          %th
+          %th{:style => "width: 200px;"}
             %p.header Player Count
-          %th
+          %th{:style => "width: 285px;"}
             %p.header Date and Time
-        %tr.item{"ng-repeat" => "mission in page_data.missions",
+        %tr.item{"ng-repeat" => "mission in page_data.missions | orderBy:'date':false",
                  "ng-style" => "listitemstyle",
                  "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b', 'cursor': 'pointer'}",
                  "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b', 'cursor': 'auto'}",
@@ -81,13 +81,13 @@
       %p Past Missions
       %table
         %tr.header
-          %th
+          %th{:style => "width: 300px;"}
             %p.header Name
-          %th
+          %th{:style => "width: 200px;"}
             %p.header Player Count
-          %th
+          %th{:style => "width: 285px;"}
             %p.header Date and Time
-        %tr.item{"ng-repeat" => "mission in page_data.missions",
+        %tr.item{"ng-repeat" => "mission in page_data.missions | orderBy:'date':true",
                  "ng-style" => "listitemstyle",
                  "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b', 'cursor': 'pointer'}",
                  "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b', 'cursor': 'auto'}",

@@ -40,15 +40,16 @@
            "ng-model" => "mission_template",
            "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
     %p Date and Time:
-    .datetime_picker
-      %div{:style => "display:inline-block; min-height:290px;"}
-        %uib-datepicker.well.well-sm{"custom-class" => "getDayClass(date, mode)", "min-date" => "minDate", "ng-model" => "dt", "show-weeks" => "true"}
-    %br
+    %p {{format_date(mission_datetime)}}
+    .time_picker
+      %uib-timepicker{"hour-step" => "hstep", "minute-step" => "mstep", "ng-model" => "mission_datetime", "show-meridian" => "false"}
+    .date_picker
+      %div{:style => "display:inline-block; min-height:260px;"}
+        %uib-datepicker.well.well-sm{"custom-class" => "getDayClass(date, mode)", "min-date" => "minDate", "max-date" => "maxDate", "ng-model" => "mission_datetime", "show-weeks" => "true"}
     %input{"type" => "submit",
            "value" => "Create Mission",
            "id" => "btn",
            "ng-click" => "create_mission(mission_name, mission_template, mission_datetime)"}
            
 
-           
            
