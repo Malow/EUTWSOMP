@@ -34,10 +34,6 @@
       %span Created by {{current_mission.creator.username}} at {{format_date(current_mission.created_at)}}
     %span {{current_mission.name}}
     %br
-    %input{"type" => "submit",
-           "value" => "Join Mission",
-           "ng-click" => "join_mission(current_mission.id)",
-           "ng-if" => "!am_i_in_mission(current_mission.id)"}
     %span.date_text {{format_date(current_mission.date)}}
     
 .players
@@ -53,6 +49,8 @@
             %p {{get_user(participant.user_id).username}}
           %td 
             %p {{format_date(participant.joined_at)}}
+            
+      %input{"type" => "submit", "value" => "Join Mission", "ng-click" => "join_mission(current_mission.id)", "ng-if" => "!am_i_in_mission(current_mission.id)"}
             
   .role_loadout
     %div
