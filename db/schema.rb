@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 3) do
     t.string   "role"
     t.integer  "slot_id"
     t.datetime "joined_at"
+    t.boolean  "is_mission_admin"
   end
 
   create_table "users", force: true do |t|

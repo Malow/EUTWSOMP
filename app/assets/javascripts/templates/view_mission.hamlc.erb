@@ -38,17 +38,21 @@
     
 .players
   .unassigned_players
-    %div
+    .body
       %p.header Unassigned Players
       %table
         %tr{"ng-repeat" => "participant in get_participants_for_mission(current_mission.id)",
             "ng-style" => "listitemstyle",
             "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b'}",
-            "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b'}"}
+            "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b'}",
+            "ng-click" => "make_mission_admin(participant)"}
           %td 
-            %p {{get_user(participant.user_id).username}}
+            %p{"uib-popover" => "Joined at: {{format_date(participant.joined_at)}}", 
+               "popover-trigger" => "mouseenter"} {{get_user(participant.user_id).username}}
           %td 
-            %p {{format_date(participant.joined_at)}}
+            %p 
+          %td
+            %p{"ng-if" => "is_participant_mission_admin(participant)"} MA
             
       %input{"type" => "submit", "value" => "Join Mission", "ng-click" => "join_mission(current_mission.id)", "ng-if" => "!am_i_in_mission(current_mission.id)"}
             

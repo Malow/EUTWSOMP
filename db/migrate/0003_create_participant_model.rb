@@ -6,6 +6,7 @@ class CreateParticipantModel < ActiveRecord::Migration
       t.column "role", :string
       t.column "slot_id", :integer
       t.column "joined_at", :datetime
+      t.column "is_mission_admin", :boolean
     end
   end
 end

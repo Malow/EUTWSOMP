@@ -74,6 +74,24 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
             participants.push($scope.page_data.participants[i])
           ++i
       return participants
+      
+    $scope.get_participant_for_mission = (mission_id, user_id) ->
+      participants = $scope.get_participants_for_mission(mission_id)
+      if participants
+        i = 0
+        while i < participants.length
+          if user_id == participants[i].user_id
+            return participants[i]
+          ++i
+      return null
+      
+    $scope.is_participant_mission_admin = (participant) ->
+      user = $scope.get_user(participant.user_id)
+      mission = $scope.get_mission(participant.mission_id)
+      if participant && mission && user
+        if participant.is_mission_admin || mission.creator_id == user.id || user.is_admin
+          return true
+      return false
           
     $scope.set_current_mission_from_page_data = (id) ->
       m = $scope.get_mission(id)
@@ -149,6 +167,17 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
       account.user_action = "make_admin"
       account.user = user
       account.$save ((data, headers) ->
+        $scope.refresh()
+      ), (error) ->
+        $scope.error = error.data.message
+        
+    $scope.make_mission_admin = (participant) ->
+      $scope.error = null
+      mission = new Mission()
+      mission.mission_action = "make_mission_admin"
+      mission.user_id = participant.user_id
+      mission.mission_id = participant.mission_id
+      mission.$save ((data, headers) ->
         $scope.refresh()
       ), (error) ->
         $scope.error = error.data.message
