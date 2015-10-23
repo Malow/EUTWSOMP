@@ -1,0 +1,13 @@
+-# MENU
+.menu
+  %div
+    %p Menu
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('missions')"} Missions
+    %br
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('mission_templates')"} Mission Templates
+    %br
+    %a.other{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('users')"} Users
+    %br

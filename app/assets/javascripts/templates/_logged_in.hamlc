@@ -1,0 +1,10 @@
+-# LOGGED_IN
+.logged_in
+  %div
+    %p You are logged in as {{page_data.you.username}}
+    %input{"type" => "submit",
+           "value" => "Account Settings",
+           "ng-click" => "go_to_account_settings()"}
+    %input{"type" => "submit",
+           "value" => "Log out",
+           "ng-click" => "logout()"}

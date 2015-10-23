@@ -1,0 +1,37 @@
+Change the updating page_data to be more performance friendly.
+    Use Cache, like ILP, to cache an ID for each connected username. This cache's ID is updated to match the current package_id when a full refresh is done (like when the user loads the page),
+      or when the last partial_update was done.
+    Then only partial refreshes are done every second, or even 0.5 seconds, where site asks for updates. Package-Updates are stored in the cache based on its ID as well. 
+    So on a partial refresh last_package_id is gathered from cache for that client, and as long as that is lower than current_package_id each package_id in between is gathered from the
+      cache and applied to an object that is later sent to gon.
+    For example, client A has last_package_id 5 when it asks for a partial refresh. current_package_id is 7. Packages with id 6 and 7 are gathered from the cache.
+      Packade 6 has an openstruct like: OpenStruct.new(:updated_element => "User", :element_id => 4, :updated_property => "is_admin", :new_value => "true")
+      Either return with JSON as an object or just push shit with gon. In any case an array of these packages are returned, and then it's up to the front-end to un-pack and put the 
+        data where it should be.
+        
+        
+        
+        
+        
+Add role-preferences.
+    2 new models. Role, which is an admin-level model that admins can add new ones. They have id and name.
+    Role_preferences which is a user-level model that each user has one of, it in turn has 
+    
+    
+    
+    
+Add teammate preferences?
+    
+    
+    
+    
+    
+Auto-generate teams
+    Move "already assigned" checkbox. If checked the auto-generator will move people who are already in a slot.
+    Auto-generate completely random teams.
+    Auto-generate random teams based on role-preferences.
+    Auto-generate random teams based on role-preferences and teammate-preferences
+    
+    
+    
+    
