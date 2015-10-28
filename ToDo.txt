@@ -11,12 +11,10 @@ Change the updating page_data to be more performance friendly.
         
         
         
-        
-        
-Add role-preferences.
-    2 new models. Role, which is an admin-level model that admins can add new ones. They have id and name.
-    Role_preferences which is a user-level model that each user has one of, it in turn has 
-    
+      
+      
+Add mission-template
+  
     
     
     

@@ -15,6 +15,10 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
     $resource("/account")
   ]
   
+  .factory 'Role', ['$resource', ($resource) ->
+    $resource("/role")
+  ]
+  
   .factory 'PageData', ['$resource', ($resource) ->
     $resource("/page_data")
   ]
@@ -23,8 +27,8 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
     $resource("/mission")
   ]
 
-  .controller 'EUTWSpecOpsMissionPlannerController', ['$scope', '$window', '$location', '$interval', '$routeParams', 'Account', 'PageData', 'Mission', 
-  ($scope, $window, $location, $interval, $routeParams, Account, PageData, Mission) ->
+  .controller 'EUTWSpecOpsMissionPlannerController', ['$scope', '$window', '$location', '$interval', '$routeParams', 'Account', 'Role', 'PageData', 'Mission', 
+  ($scope, $window, $location, $interval, $routeParams, Account, Role, PageData, Mission) ->
     
     $scope.refresh = () ->
       page_data = new PageData()
@@ -85,6 +89,58 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
           ++i
       return null
       
+    $scope.get_role_preferences_for_user = (user_id) ->
+      role_preferences = []
+      if $scope.page_data && $scope.page_data.role_preferences
+        i = 0
+        while i < $scope.page_data.role_preferences.length
+          if user_id == $scope.page_data.role_preferences[i].user_id
+            role_preferences.push($scope.page_data.role_preferences[i])
+          ++i
+      return role_preferences
+    
+    $scope.get_role_preference_for_user = (user_id, role_id) ->
+      role_preferences = $scope.get_role_preferences_for_user(user_id)
+      if role_preferences
+        i = 0
+        while i < role_preferences.length
+          if role_id == role_preferences[i].role_id
+            return role_preferences[i]
+          ++i
+      return null
+      
+    $scope.change_role_preference = (role_id, amount) ->
+      $scope.error = null
+      role = new Role()
+      role.user_action = "change_role_preference"
+      role.role_id = role_id
+      role.amount = amount
+      role.$save ((data, headers) ->
+        $scope.refresh()
+      ), (error) ->
+        $scope.error = error.data.message
+
+    $scope.create_role = (role_name, role_description) ->
+      $scope.error = null
+      role = new Role()
+      role.user_action = "create_role"
+      role.role_name = role_name
+      role.role_description = role_description
+      role.$save ((data, headers) ->
+        $scope.refresh()
+      ), (error) ->
+        $scope.error = error.data.message
+        
+    $scope.delete_role = (role_id) ->
+      $scope.error = null
+      role = new Role()
+      role.user_action = "delete_role"
+      role.role_id = role_id
+      role.$save ((data, headers) ->
+        $scope.refresh()
+      ), (error) ->
+        $scope.error = error.data.message
+      
     $scope.is_participant_mission_admin = (participant) ->
       user = $scope.get_user(participant.user_id)
       mission = $scope.get_mission(participant.mission_id)
@@ -109,6 +165,11 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
         $scope.set_current_mission_from_page_data($routeParams.mission_id)
        
     $scope.dashboard_selection = 'missions'
+    
+    $scope.has_selected_on_dashboard = (selection) ->      
+      if $scope.dashboard_selection == selection && $location.path() == '/'
+        return true
+      return false
     
     $scope.register = (username, password, email) ->
       $scope.error = null
@@ -262,6 +323,13 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
     
     $scope.hstep = 1
     $scope.mstep = 10
+    
+    
+      
+    
+    
+    
+    
   ]
   
   

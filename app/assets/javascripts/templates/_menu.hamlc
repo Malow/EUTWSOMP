@@ -2,12 +2,20 @@
 .menu
   %div
     %p Menu
-    %a.other{"href" => "javascript:;",
-       "ng-click" => "go_to_dashboard('missions')"} Missions
+    %a{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('missions')",
+       "ng-class" => "has_selected_on_dashboard('missions') ? 'current' : 'other'"} Missions
     %br
-    %a.other{"href" => "javascript:;",
-       "ng-click" => "go_to_dashboard('mission_templates')"} Mission Templates
+    %a{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('mission_templates')",
+       "ng-class" => "has_selected_on_dashboard('mission_templates') ? 'current' : 'other'"} Mission Templates
     %br
-    %a.other{"href" => "javascript:;",
-       "ng-click" => "go_to_dashboard('users')"} Users
+    %a{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('users')",
+       "ng-class" => "has_selected_on_dashboard('users') ? 'current' : 'other'"} Users
+    %br
+    %a{"href" => "javascript:;",
+       "ng-click" => "go_to_dashboard('roles')",
+       "ng-class" => "has_selected_on_dashboard('roles') ? 'current' : 'other'",
+       "ng-if" => "page_data.you.is_admin"} Roles
     %br

@@ -8,3 +8,27 @@
 +include 'menu'
                  
 .account_settings
+  .role_preferences
+    .list
+      %p Role Preferences
+      %table
+        %tr.header
+          %th
+            %p.header Role
+          %th
+            %p.header Preference (1-10)
+        %tr.item{"ng-repeat" => "role in page_data.roles",
+                 "ng-style" => "listitemstyle",
+                 "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b'}",
+                 "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b'}"}
+          %td 
+            %p.name {{role.name}}
+            %p.description {{role.description}}
+          %td.right
+            %input{"type" => "submit",
+                   "value" => "+",
+                   "ng-click" => "change_role_preference(role.id, 1)"}
+            %span {{get_role_preference_for_user(page_data.you.id, role.id).preference || '?'}}
+            %input{"type" => "submit",
+                   "value" => "-",
+                   "ng-click" => "change_role_preference(role.id, -1)"}

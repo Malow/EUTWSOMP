@@ -83,3 +83,36 @@
       .item{"ng-repeat" => "mission_template in page_data.mission_templates"}
         %p Mission Template here  
         
+  .role_list{"ng-if" => "dashboard_selection == 'roles'"}
+    .list
+      %p Roles
+      .item{"ng-repeat" => "role in page_data.roles",
+            "ng-style" => "listitemstyle",
+            "ng-mouseenter" => "listitemstyle = {'background-color': '#34444b'}",
+            "ng-mouseleave" => "listitemstyle = {'background-color': '#24343b'}"}
+        %input{"type" => "submit",
+               "value" => "X",
+               "ng-click" => "delete_role(role.id)"}
+        %p.name {{role.name}}
+        %p.description {{role.description}}
+      %input{"type" => "submit",
+             "value" => "New Role",
+             "ng-click" => "show_new_role = true",
+             "ng-hide" => "show_new_role"}
+      .new_role{"ng-show" => "show_new_role"}
+        %p Role Name:
+        %input{"type" => "text",
+               "ng-model" => "new_role_name",
+               "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
+        %p Role Description:
+        %textarea.ta{"ng-model" => "new_role_description",
+                  "onkeydown" => "if (event.keyCode == 13) document.getElementById('btn').click()"}
+        %input{"type" => "submit",
+               "value" => "Create Role",
+               "id" => "btn",
+               "ng-click" => "create_role(new_role_name, new_role_description); show_new_role = false"}
+        
+        
+        
+        
+        

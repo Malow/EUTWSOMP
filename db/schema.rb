@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 3) do
+ActiveRecord::Schema.define(version: 5) do
 
   create_table "missions", force: true do |t|
     t.string   "name"
@@ -30,6 +30,17 @@ ActiveRecord::Schema.define(version: 3) do
     t.integer  "slot_id"
     t.datetime "joined_at"
     t.boolean  "is_mission_admin"
+  end
+
+  create_table "role_preferences", force: true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
+    t.integer "preference"
+  end
+
+  create_table "roles", force: true do |t|
+    t.string "name"
+    t.string "description"
   end
 
   create_table "users", force: true do |t|

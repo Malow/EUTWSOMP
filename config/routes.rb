@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "/register" => "account#register"
   
   resources :account, only: [:create]
+  resources :role, only: [:create]
   resources :page_data, only: [:create]
   resources :mission, only: [:create]
   
