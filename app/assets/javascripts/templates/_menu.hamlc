@@ -18,4 +18,3 @@
        "ng-click" => "go_to_dashboard('roles')",
        "ng-class" => "has_selected_on_dashboard('roles') ? 'current' : 'other'",
        "ng-if" => "page_data.you.is_admin"} Roles
-    %br

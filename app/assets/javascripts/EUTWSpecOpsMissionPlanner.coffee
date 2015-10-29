@@ -4,6 +4,8 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
     $routeProvider
       .when('/',                                {template: (-> JST['dashboard']()), reloadOnSearch: false })
       .when('/login',                           {template: (-> JST['login']()), reloadOnSearch: false })
+      .when('/forgot_password',                 {template: (-> JST['forgot_password']()), reloadOnSearch: false })
+      .when('/password_reset',                  {template: (-> JST['password_reset']()), reloadOnSearch: false })
       .when('/register',                        {template: (-> JST['register']()),  reloadOnSearch: false })
       .when('/account_settings',                {template: (-> JST['account_settings']()), reloadOnSearch: false })
       .when('/new_mission',                     {template: (-> JST['new_mission']()), reloadOnSearch: false })
@@ -49,6 +51,9 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
       ), 1000000)
       
     $scope.refresh()
+    
+    if gon.error
+      $scope.error = gon.error
     
     $scope.get_user = (id) ->
       if $scope.page_data && $scope.page_data.users
@@ -196,8 +201,46 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
       ), (error) ->
         $scope.error = error.data.message
         
+    $scope.change_password = (old_password, new_password) ->
+      $scope.error = null
+      account = new Account()
+      account.user_action = "change_password"
+      account.old_password = old_password
+      account.new_password = new_password
+      account.$save ((data, headers) ->
+        $location.path("/")
+        $scope.refresh()
+      ), (error) ->
+        $scope.error = error.data.message
+        
+    $scope.forgot_password = (username) ->
+      $scope.error = null
+      account = new Account()
+      account.user_action = "forgot_password"
+      account.username = username
+      account.$save ((data, headers) ->
+        $scope.forgot_password_text = "An email has been sent to you for instructions on how to reset your password."
+      ), (error) ->
+        $scope.error = error.data.message
+        
+    $scope.reset_password = (new_password) ->
+      $scope.error = null
+      account = new Account()
+      account.user_action = "reset_password"
+      account.new_password = new_password
+      account.$save ((data, headers) ->
+        $scope.password_reset_text = "Your password has been reset."
+      ), (error) ->
+        $scope.error = error.data.message
+        
+    $scope.go_to_login = () ->
+      $location.path("/login")
+        
     $scope.go_to_register = () ->
       $location.path("/register")
+      
+    $scope.go_to_forgot_password = () ->
+      $location.path("/forgot_password")
       
     $scope.go_to_account_settings = () ->
       $location.path("/account_settings")
@@ -217,8 +260,8 @@ angular.module('EUTWSpecOpsMissionPlanner', ['ngResource', 'ngRoute', 'ngTouch',
       account = new Account()
       account.user_action = "log_out"
       account.$save ((data, headers) ->
-        $location.path("/login")
         $scope.refresh()
+        $location.path("/login")
       ), (error) ->
         $scope.error = error.data.message
         

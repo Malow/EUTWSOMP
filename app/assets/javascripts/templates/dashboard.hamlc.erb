@@ -83,7 +83,7 @@
       .item{"ng-repeat" => "mission_template in page_data.mission_templates"}
         %p Mission Template here  
         
-  .role_list{"ng-if" => "dashboard_selection == 'roles'"}
+  .role_list{"ng-show" => "dashboard_selection == 'roles'"}
     .list
       %p Roles
       .item{"ng-repeat" => "role in page_data.roles",

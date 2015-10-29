@@ -50,6 +50,8 @@ ActiveRecord::Schema.define(version: 5) do
     t.datetime "last_signed_in_on"
     t.datetime "signed_up_on"
     t.boolean  "is_admin"
+    t.string   "password_reset_token"
+    t.datetime "password_expires_after"
   end
 
 end

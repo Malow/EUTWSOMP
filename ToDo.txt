@@ -9,9 +9,15 @@ Change the updating page_data to be more performance friendly.
       Either return with JSON as an object or just push shit with gon. In any case an array of these packages are returned, and then it's up to the front-end to un-pack and put the 
         data where it should be.
         
-        
-        
-      
+
+
+Change to email-first authentification, username is just a shown name.
+Change all "asd" + username to #{username}
+Change all errorhandling, use proper fucking errors, each module has its own error, if that error is thrown like "wrong pw" just log that, if standarderror is thrown print whole stack.
+Add password validation to require decent semi-strong PWs.
+Fix so it's not retarded on the phone, look at the scaling code on ILP
+
+Add password salting like basic_auth
       
 Add mission-template
   
